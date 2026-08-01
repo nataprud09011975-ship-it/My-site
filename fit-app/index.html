@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="FitWeek — тренировки, меню и мотивация для здорового похудения">
+<title>FitWeek — путь к стройности</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+(function(){
+  if(localStorage.getItem("fitTheme") === "dark"){
+    document.documentElement.setAttribute("data-theme","dark");
+  }
+})();
+</script>
+<style>
+:root{
+  --bg:linear-gradient(165deg,#f0faf4 0%,#f5f7fa 50%,#fef9f3 100%);
+  --surface:#ffffff;
+  --surface2:#f4f9f6;
+  --text:#1a2e24;
+  --text-muted:#5c6b63;
+  --accent:#2ecc71;
+  --accent-dark:#27ae60;
+  --accent-soft:rgba(46,204,113,0.15);
+  --coral:#ff7e67;
+  --border:#dce8e0;
+  --shadow:0 8px 32px rgba(26,46,36,0.08);
+  --radius:16px;
+  --font:'Manrope',system-ui,sans-serif;
+  --theme-btn-bg:#1a2e24;
+  --theme-btn-color:#fff;
+}
+html[data-theme="dark"]{
+  --bg:linear-gradient(165deg,#0f1412 0%,#141a17 50%,#1a1510 100%);
+  --surface:#1c2420;
+  --surface2:#232b27;
+  --text:#e8f0eb;
+  --text-muted:#9aab9f;
+  --accent:#3dd68a;
+  --accent-dark:#2ecc71;
+  --accent-soft:rgba(61,214,138,0.12);
+  --coral:#ff9a85;
+  --border:#2d3832;
+  --shadow:0 8px 32px rgba(0,0,0,0.35);
+  --theme-btn-bg:#e8f0eb;
+  --theme-btn-color:#0f1412;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  transition:background .3s,color .3s;
+}
+.app{max-width:920px;margin:0 auto;padding:16px 16px 100px}
+header.app-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 0 20px;gap:12px;flex-wrap:wrap;
+}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.2rem}
+.logo-icon{
+  width:40px;height:40px;border-radius:12px;
+  background:linear-gradient(135deg,var(--accent),var(--coral));
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+}
+.streak-badge{
+  padding:8px 14px;border-radius:999px;
+  background:var(--accent-soft);font-size:13px;font-weight:600;color:var(--accent-dark);
+}
+nav.tabs{
+  display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;
+  scrollbar-width:none;margin-bottom:20px;
+}
+nav.tabs::-webkit-scrollbar{display:none}
+.tab{
+  flex-shrink:0;padding:10px 16px;border-radius:999px;
+  border:1px solid var(--border);background:var(--surface);
+  font-size:13px;font-weight:600;cursor:pointer;color:var(--text-muted);
+  transition:all .2s;
+}
+.tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.panel{display:none;animation:fadeIn .35s ease}
+.panel.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:20px;margin-bottom:16px;box-shadow:var(--shadow);
+  transition:background .3s,border-color .3s;
+}
+.card-title{font-size:1rem;font-weight:700;margin-bottom:12px}
+.motivation{
+  background:linear-gradient(135deg,var(--accent-soft),rgba(255,126,103,0.12));
+  border-left:4px solid var(--accent);padding:18px 20px;
+  font-size:15px;line-height:1.65;font-style:italic;color:var(--text);
+}
+.motivation-author{display:block;margin-top:10px;font-size:12px;font-style:normal;color:var(--text-muted);font-weight:600}
+.day-picker{display:flex;gap:6px;overflow-x:auto;margin-bottom:16px;padding-bottom:4px}
+.day-btn{
+  flex-shrink:0;min-width:44px;padding:10px 8px;border-radius:12px;
+  border:1px solid var(--border);background:var(--surface2);
+  text-align:center;cursor:pointer;font-size:12px;font-weight:600;
+  transition:all .2s;
+}
+.day-btn span{display:block;font-size:10px;color:var(--text-muted);margin-top:2px}
+.day-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.day-btn.active span{color:rgba(255,255,255,.85)}
+.day-btn.done::after{content:'✓';display:block;font-size:10px;color:var(--accent)}
+.workout-time{font-size:13px;color:var(--coral);font-weight:600;margin-bottom:8px}
+.exercise-list{list-style:none}
+.exercise-list li{
+  padding:10px 12px;margin-bottom:8px;border-radius:10px;
+  background:var(--surface2);font-size:14px;display:flex;align-items:center;gap:10px;
+}
+.exercise-list li::before{content:'🏃';font-size:16px}
+.exercise-list.rest li::before{content:'🧘'}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 20px;border:none;border-radius:999px;
+  font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;
+}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-dark);transform:translateY(-1px)}
+.btn-outline{background:transparent;border:1px solid var(--accent);color:var(--accent)}
+.btn-block{width:100%;margin-top:12px}
+.meal-grid{display:grid;gap:10px}
+.meal-item{
+  padding:14px;border-radius:12px;background:var(--surface2);
+  border-left:3px solid var(--accent);
+}
+.meal-item.snack{border-left-color:var(--coral)}
+.meal-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:4px}
+.meal-text{font-size:14px;line-height:1.5}
+.week-grid{display:grid;gap:12px}
+@media(min-width:600px){.week-grid{grid-template-columns:1fr 1fr}}
+.week-day-card{
+  padding:16px;border-radius:14px;background:var(--surface2);
+  border:1px solid var(--border);cursor:pointer;transition:all .2s;
+}
+.week-day-card:hover{border-color:var(--accent)}
+.week-day-card h4{font-size:14px;margin-bottom:6px}
+.week-day-card p{font-size:12px;color:var(--text-muted);line-height:1.5}
+.reminder-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 0;border-bottom:1px solid var(--border);gap:12px;
+}
+.reminder-row:last-child{border-bottom:none}
+.reminder-info h4{font-size:14px;margin-bottom:2px}
+.reminder-info p{font-size:12px;color:var(--text-muted)}
+.toggle{
+  width:48px;height:26px;border-radius:999px;background:var(--border);
+  position:relative;cursor:pointer;flex-shrink:0;transition:background .2s;
+}
+.toggle.on{background:var(--accent)}
+.toggle::after{
+  content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;
+  border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 2px 4px rgba(0,0,0,.15);
+}
+.toggle.on::after{transform:translateX(22px)}
+.time-input{
+  padding:8px 12px;border-radius:8px;border:1px solid var(--border);
+  background:var(--surface);color:var(--text);font:inherit;font-size:14px;
+}
+.progress-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.stat-box{
+  text-align:center;padding:16px 8px;border-radius:14px;
+  background:var(--surface2);border:1px solid var(--border);
+}
+.stat-num{font-size:28px;font-weight:700;color:var(--accent);line-height:1}
+.stat-label{font-size:11px;color:var(--text-muted);margin-top:4px}
+.toast{
+  position:fixed;bottom:88px;left:50%;transform:translateX(-50%) translateY(20px);
+  max-width:90%;padding:14px 20px;border-radius:14px;
+  background:var(--text);color:var(--surface);
+  font-size:14px;font-weight:500;opacity:0;pointer-events:none;
+  transition:all .35s;z-index:200;text-align:center;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.theme-toggle{
+  position:fixed;right:20px;bottom:20px;z-index:150;
+  width:48px;height:48px;border-radius:50%;border:none;cursor:pointer;
+  background:var(--theme-btn-bg);color:var(--theme-btn-color);
+  font-size:20px;box-shadow:var(--shadow);
+}
+footer.app-footer{text-align:center;padding:24px 0;font-size:12px;color:var(--text-muted)}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+<header class="app-header">
+  <div class="logo">
+    <div class="logo-icon">💪</div>
+    FitWeek
+  </div>
+  <div class="streak-badge" id="streakBadge">🔥 Серия: 0 дней</div>
+</header>
+
+<!-- Вкладки навигации -->
+<nav class="tabs" id="tabs">
+  <button type="button" class="tab active" data-panel="today">Сегодня</button>
+  <button type="button" class="tab" data-panel="workouts">Тренировки</button>
+  <button type="button" class="tab" data-panel="menu">Меню</button>
+  <button type="button" class="tab" data-panel="reminders">Напоминания</button>
+  <button type="button" class="tab" data-panel="progress">Прогресс</button>
+</nav>
+
+<!-- ===== СЕГОДНЯ ===== -->
+<section class="panel active" id="panel-today">
+
+  <div class="card motivation" id="motivationBlock">
+    <span id="motivationText">Загрузка...</span>
+    <span class="motivation-author" id="motivationAuthor"></span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📅 Сегодня — <span id="todayDate"></span></div>
+    <div id="todayWorkout"></div>
+    <button type="button" class="btn btn-primary btn-block" id="markDoneBtn">Отметить тренировку выполненной</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🍽 Меню на сегодня</div>
+    <div class="meal-grid" id="todayMeals"></div>
+  </div>
+
+</section>
+
+<!-- ===== ТРЕНИРОВКИ ===== -->
+<section class="panel" id="panel-workouts">
+
+  <div class="card">
+    <div class="card-title">Расписание тренировок на неделю</div>
+    <div class="day-picker" id="workoutDayPicker"></div>
+    <div id="workoutDetail"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Обзор недели</div>
+    <div class="week-grid" id="workoutWeek"></div>
+  </div>
+
+</section>
+
+<!-- ===== МЕНЮ ===== -->
+<section class="panel" id="panel-menu">
+
+  <div class="card">
+    <div class="card-title">Меню на неделю (~1500 ккал/день)</div>
+    <div class="day-picker" id="menuDayPicker"></div>
+    <div class="meal-grid" id="menuDetail"></div>
+  </div>
+
+</section>
+
+<!-- ===== НАПОМИНАНИЯ ===== -->
+<section class="panel" id="panel-reminders">
+
+  <div class="card">
+    <div class="card-title">🔔 Напоминания</div>
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.6">
+      Включите уведомления браузера — приложение напомнит о тренировке, приёме пищи и подбодрит вас мотивацией.
+    </p>
+
+    <div class="reminder-row">
+      <div class="reminder-info">
+        <h4>Утренняя мотивация</h4>
+        <p>Мотивирующая фраза и настрой на день</p>
+      </div>
+      <input type="time" class="time-input" id="timeMotivation" value="07:30">
+      <div class="toggle on" data-key="motivation" role="switch" aria-checked="true"></div>
+    </div>
+
+    <div class="reminder-row">
+      <div class="reminder-info">
+        <h4>Тренировка</h4>
+        <p>Напоминание начать занятие</p>
+      </div>
+      <input type="time" class="time-input" id="timeWorkout" value="08:00">
+      <div class="toggle on" data-key="workout" role="switch" aria-checked="true"></div>
+    </div>
+
+    <div class="reminder-row">
+      <div class="reminder-info">
+        <h4>Завтрак</h4>
+        <p>Не пропустите первый приём пищи</p>
+      </div>
+      <input type="time" class="time-input" id="timeBreakfast" value="08:30">
+      <div class="toggle on" data-key="breakfast" role="switch" aria-checked="true"></div>
+    </div>
+
+    <div class="reminder-row">
+      <div class="reminder-info">
+        <h4>Обед</h4>
+        <p>Сбалансированный обед</p>
+      </div>
+      <input type="time" class="time-input" id="timeLunch" value="13:00">
+      <div class="toggle on" data-key="lunch" role="switch" aria-checked="true"></div>
+    </div>
+
+    <div class="reminder-row">
+      <div class="reminder-info">
+        <h4>Ужин</h4>
+        <p>Лёгкий ужин за 3 часа до сна</p>
+      </div>
+      <input type="time" class="time-input" id="timeDinner" value="19:00">
+      <div class="toggle on" data-key="dinner" role="switch" aria-checked="true"></div>
+    </div>
+
+    <div class="reminder-row">
+      <div class="reminder-info">
+        <h4>Вода</h4>
+        <p>Выпейте стакан воды</p>
+      </div>
+      <input type="time" class="time-input" id="timeWater" value="11:00">
+      <div class="toggle on" data-key="water" role="switch" aria-checked="true"></div>
+    </div>
+
+    <button type="button" class="btn btn-primary btn-block" id="enableNotifyBtn">Разрешить уведомления</button>
+  </div>
+
+</section>
+
+<!-- ===== ПРОГРЕСС ===== -->
+<section class="panel" id="panel-progress">
+
+  <div class="card">
+    <div class="card-title">📊 Ваш прогресс</div>
+    <div class="progress-stats">
+      <div class="stat-box">
+        <div class="stat-num" id="statStreak">0</div>
+        <div class="stat-label">дней подряд</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="statWorkouts">0</div>
+        <div class="stat-label">тренировок</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="statWeek">0/7</div>
+        <div class="stat-label">на этой неделе</div>
+      </div>
+    </div>
+    <p style="font-size:13px;color:var(--text-muted);line-height:1.6;text-align:center">
+      Каждый шаг приближает вас к цели. Главное — регулярность, а не идеальность.
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Календарь выполненных тренировок</div>
+    <div class="day-picker" id="progressDays"></div>
+  </div>
+
+</section>
+
+<footer class="app-footer">FitWeek · Здоровое похудение без жёстких диет</footer>
+
+</div>
+
+<div class="toast" id="toast"></div>
+<button type="button" class="theme-toggle" id="themeToggle" aria-label="Тема">🌙</button>
+
+<script>
+/* =============================================
+   ДАННЫЕ: тренировки и меню на неделю
+   ============================================= */
+
+const DAYS = ["mon","tue","wed","thu","fri","sat","sun"];
+const DAY_NAMES = {mon:"Пн",tue:"Вт",wed:"Ср",thu:"Чт",fri:"Пт",sat:"Сб",sun:"Вс"};
+const DAY_FULL  = {mon:"Понедельник",tue:"Вторник",wed:"Среда",thu:"Четверг",fri:"Пятница",sat:"Суббота",sun:"Воскресенье"};
+
+const WORKOUTS = {
+  mon: { title:"Кардио + пресс", time:"08:00", type:"cardio",
+    exercises:["Разминка — 5 мин ходьбы на месте","Скакалка — 3×2 мин (отдых 1 мин)","Бёрпи — 3×10","Планка — 3×40 сек","Растяжка — 5 мин"] },
+  tue: { title:"Силовая (верх тела)", time:"08:00", type:"strength",
+    exercises:["Разминка — 5 мин","Отжимания — 4×12","Обратные отжимания — 3×10","Планка с касанием плеч — 3×20","Гантели/бутылки — 3×15","Растяжка — 5 мин"] },
+  wed: { title:"Активный отдых", time:"09:00", type:"rest",
+    exercises:["Прогулка 30–40 мин в быстром темпе","10 мин йоги или растяжки","Дыхательные упражнения — 5 мин"] },
+  thu: { title:"Кардио интервалы", time:"08:00", type:"cardio",
+    exercises:["Разминка — 5 мин","Бег/ходьба: 1 мин быстро / 1 мин медленно × 10","Приседания — 3×20","Велосипед — 3×20","Растяжка — 5 мин"] },
+  fri: { title:"Силовая (низ тела)", time:"08:00", type:"strength",
+    exercises:["Разминка — 5 мин","Приседания — 4×15","Выпады — 3×12 на ногу","Ягодичный мост — 3×20","Подъём на носки — 3×20","Растяжка — 5 мин"] },
+  sat: { title:"Полное тело", time:"10:00", type:"cardio",
+    exercises:["Разминка — 5 мин","Круговая: 40 сек работа / 20 сек отдых × 6 упражнений","Планка — 2 мин суммарно","Прыжки на месте — 3×30 сек","Растяжка — 10 мин"] },
+  sun: { title:"Восстановление", time:"10:00", type:"rest",
+    exercises:["Лёгкая прогулка 20–30 мин","Йога или пилатес — 20 мин","Медитация — 5 мин"] }
+};
+
+const MENU = {
+  mon: { breakfast:"Овсянка на воде + ягоды + чай", lunch:"Куриная грудка 150 г, гречка, салат из огурцов и помидоров", dinner:"Тушёная рыба + тушёные овощи", snack:"Яблоко + горсть миндаля" },
+  tue: { breakfast:"Омлет из 2 яиц + зелень + цельнозерновой хлеб", lunch:"Индейка 150 г + бурый рис + капустный салат", dinner:"Творог 5% 150 г + огурец", snack:"Греческий йогурт без сахара" },
+  wed: { breakfast:"Смузи: банан, шпинат, кефир 1%", lunch:"Суп-пюре из тыквы + кусок цельнозернового хлеба", dinner:"Куриный салат с авокадо", snack:"Морковь + хумус" },
+  thu: { breakfast:"Творожная запеканка без сахара + ягоды", lunch:"Говядина тушёная 120 г + quinoa + овощи на пару", dinner:"Омлет + салат из зелени", snack:"Киви + 10 г орехов" },
+  fri: { breakfast:"Гречка + варёное яйцо + огурец", lunch:"Запечённая рыба + салат «Греческий»", dinner:"Кефир 1% + салат из белокочанной капусты", snack:"Груша" },
+  sat: { breakfast:"Сырники из творога 5% (запечь, без сахара)", lunch:"Куриное филе на гриле + овощи", dinner:"Рагу из овощей + 1 яйцо", snack:"Ягоды" },
+  sun: { breakfast:"Авокадо-тост на цельнозерновом хлебе + яйцо", lunch:"Лёгкий суп + салат", dinner:"Творог 150 г + зелень", snack:"Апельсин" }
+};
+
+const MOTIVATIONS = [
+  { text:"Вы не обязаны быть идеальными. Вы обязаны быть последовательными.", author:"Неизвестный автор" },
+  { text:"Каждая тренировка — это голосование за ту версию себя, которой вы хотите стать.", author:"Джеймс Клир" },
+  { text:"Маленький прогресс каждый день складывается в большой результат.", author:"FitWeek" },
+  { text:"Ваше тело может всё. Это голова нуждается в убеждении.", author:"FitWeek" },
+  { text:"Не сравнивайте себя с другими. Сравнивайте себя с собой вчерашним.", author:"FitWeek" },
+  { text:"Похудение — это марафон, а не спринт. Дышите и идите дальше.", author:"FitWeek" },
+  { text:"Сегодняшние усилия — завтрашняя уверенность.", author:"FitWeek" },
+  { text:"Один день без тренировки — не катастрофа. Катастрофа — бросить навсегда.", author:"FitWeek" },
+  { text:"Вы уже прошли 100% своих трудных дней и справились.", author:"FitWeek" },
+  { text:"Здоровая еда — это не наказание, а инвестиция в себя.", author:"FitWeek" },
+  { text:"Сила не в том, чтобы никогда не падать, а в том, чтобы подниматься.", author:"Конфуций" },
+  { text:"Начните там, где вы есть. Используйте то, что у вас есть. Делайте что можете.", author:"Арthur Ashe" },
+  { text:"Дисциплина — это мост между целями и результатами.", author:"FitWeek" },
+  { text:"Каждый стакан воды — маленькая победа.", author:"FitWeek" }
+];
+
+const REMINDER_MSG = {
+  motivation:"🌅 Доброе утро! Новый день — новая возможность стать лучше!",
+  workout:"💪 Пора на тренировку! Тело скажет вам спасибо.",
+  breakfast:"🥣 Время завтрака! Здоровый старт дня — залог энергии.",
+  lunch:"🥗 Обед! Не пропускайте — метаболизм работает лучше.",
+  dinner:"🍽 Лёгкий ужин. Питайтесь за 3 часа до сна.",
+  water:"💧 Выпейте стакан воды! Гидратация ускоряет метаболизм."
+};
+
+/* =============================================
+   УТИЛИТЫ
+   ============================================= */
+
+function getTodayKey(){
+  const d = new Date().getDay();
+  return DAYS[d === 0 ? 6 : d - 1];
+}
+
+function formatDate(){
+  return new Date().toLocaleDateString("ru-RU",{weekday:"long",day:"numeric",month:"long"});
+}
+
+function loadState(){
+  try{
+    return JSON.parse(localStorage.getItem("fitWeekState")) || {done:{},streak:0,lastDoneDate:null,totalWorkouts:0};
+  }catch(e){
+    return {done:{},streak:0,lastDoneDate:null,totalWorkouts:0};
+  }
+}
+
+function saveState(s){
+  localStorage.setItem("fitWeekState",JSON.stringify(s));
+}
+
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),3500);
+}
+
+function randomMotivation(){
+  const m = MOTIVATIONS[Math.floor(Math.random()*MOTIVATIONS.length)];
+  document.getElementById("motivationText").textContent = "«" + m.text + "»";
+  document.getElementById("motivationAuthor").textContent = "— " + m.author;
+  return m.text;
+}
+
+/* =============================================
+   ОТРИСОВКА
+   ============================================= */
+
+function renderWorkout(dayKey, containerId){
+  const w = WORKOUTS[dayKey];
+  const isRest = w.type === "rest";
+  const el = document.getElementById(containerId);
+  el.innerHTML = `
+    <div class="workout-time">⏰ ${w.time} · ${DAY_FULL[dayKey]}</div>
+    <h3 style="margin-bottom:12px;font-size:1.1rem">${w.title}</h3>
+    <ul class="exercise-list${isRest?" rest":""}">
+      ${w.exercises.map(e=>`<li>${e}</li>`).join("")}
+    </ul>`;
+}
+
+function renderMeals(dayKey, containerId){
+  const m = MENU[dayKey];
+  const el = document.getElementById(containerId);
+  el.innerHTML = `
+    <div class="meal-item"><div class="meal-label">Завтрак</div><div class="meal-text">${m.breakfast}</div></div>
+    <div class="meal-item"><div class="meal-label">Обед</div><div class="meal-text">${m.lunch}</div></div>
+    <div class="meal-item"><div class="meal-label">Ужин</div><div class="meal-text">${m.dinner}</div></div>
+    <div class="meal-item snack"><div class="meal-label">Перекус</div><div class="meal-text">${m.snack}</div></div>`;
+}
+
+function buildDayPicker(containerId, onSelect, selectedKey){
+  const state = loadState();
+  const el = document.getElementById(containerId);
+  el.innerHTML = DAYS.map(d=>`
+    <button type="button" class="day-btn${d===selectedKey?" active":""}${state.done[d]?" done":""}" data-day="${d}">
+      ${DAY_NAMES[d]}<span>${WORKOUTS[d].title.split(" ")[0]}</span>
+    </button>`).join("");
+  el.querySelectorAll(".day-btn").forEach(btn=>{
+    btn.addEventListener("click",()=>onSelect(btn.dataset.day));
+  });
+}
+
+function updateProgress(){
+  const state = loadState();
+  const weekDone = DAYS.filter(d=>state.done[d]).length;
+  document.getElementById("statStreak").textContent = state.streak;
+  document.getElementById("statWorkouts").textContent = state.totalWorkouts;
+  document.getElementById("statWeek").textContent = weekDone + "/7";
+  document.getElementById("streakBadge").textContent = "🔥 Серия: " + state.streak + " дн.";
+  const pd = document.getElementById("progressDays");
+  pd.innerHTML = DAYS.map(d=>`
+    <div class="day-btn${state.done[d]?" active done":""}" style="cursor:default">
+      ${DAY_NAMES[d]}<span>${state.done[d]?"✓ готово":"—"}</span>
+    </div>`).join("");
+}
+
+function markWorkoutDone(){
+  const state = loadState();
+  const today = getTodayKey();
+  if(state.done[today]){
+    showToast("Тренировка уже отмечена сегодня! 💪");
+    return;
+  }
+  state.done[today] = true;
+  state.totalWorkouts = (state.totalWorkouts||0) + 1;
+  const todayStr = new Date().toDateString();
+  if(state.lastDoneDate){
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate()-1);
+    if(state.lastDoneDate === yesterday.toDateString()){
+      state.streak = (state.streak||0) + 1;
+    } else if(state.lastDoneDate !== todayStr){
+      state.streak = 1;
+    }
+  } else {
+    state.streak = 1;
+  }
+  state.lastDoneDate = todayStr;
+  saveState(state);
+  updateProgress();
+  selectWorkoutDay(today);
+  showToast("Отлично! Тренировка выполнена 🎉");
+  randomMotivation();
+}
+
+/* =============================================
+   ВКЛАДКИ
+   ============================================= */
+
+document.getElementById("tabs").addEventListener("click",e=>{
+  const tab = e.target.closest(".tab");
+  if(!tab) return;
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+  tab.classList.add("active");
+  document.getElementById("panel-"+tab.dataset.panel).classList.add("active");
+});
+
+/* =============================================
+   НАПОМИНАНИЯ
+   ============================================= */
+
+function loadReminders(){
+  try{
+    return JSON.parse(localStorage.getItem("fitReminders")) || null;
+  }catch(e){return null;}
+}
+
+function saveReminders(data){
+  localStorage.setItem("fitReminders",JSON.stringify(data));
+}
+
+function getReminderSettings(){
+  const saved = loadReminders();
+  const defaults = {
+    motivation:{on:true,time:"07:30"},
+    workout:{on:true,time:"08:00"},
+    breakfast:{on:true,time:"08:30"},
+    lunch:{on:true,time:"13:00"},
+    dinner:{on:true,time:"19:00"},
+    water:{on:true,time:"11:00"}
+  };
+  if(!saved) return defaults;
+  return Object.assign(defaults,saved);
+}
+
+function initRemindersUI(){
+  const s = getReminderSettings();
+  Object.keys(s).forEach(key=>{
+    const toggle = document.querySelector('.toggle[data-key="'+key+'"]');
+    const timeEl = document.getElementById("time"+key.charAt(0).toUpperCase()+key.slice(1));
+    if(toggle){ toggle.classList.toggle("on",s[key].on); toggle.setAttribute("aria-checked",s[key].on); }
+    if(timeEl) timeEl.value = s[key].time;
+  });
+}
+
+document.querySelectorAll(".toggle").forEach(t=>{
+  t.addEventListener("click",()=>{
+    t.classList.toggle("on");
+    t.setAttribute("aria-checked",t.classList.contains("on"));
+    persistReminders();
+  });
+});
+
+document.querySelectorAll(".time-input").forEach(inp=>{
+  inp.addEventListener("change",persistReminders);
+});
+
+function persistReminders(){
+  const keys = ["motivation","workout","breakfast","lunch","dinner","water"];
+  const data = {};
+  keys.forEach(key=>{
+    const toggle = document.querySelector('.toggle[data-key="'+key+'"]');
+    const timeEl = document.getElementById("time"+key.charAt(0).toUpperCase()+key.slice(1));
+    data[key] = { on: toggle.classList.contains("on"), time: timeEl ? timeEl.value : "08:00" };
+  });
+  saveReminders(data);
+}
+
+const firedToday = {};
+
+function checkReminders(){
+  const now = new Date();
+  const hhmm = String(now.getHours()).padStart(2,"0")+":"+String(now.getMinutes()).padStart(2,"0");
+  const dateKey = now.toDateString();
+  const settings = getReminderSettings();
+
+  Object.keys(settings).forEach(key=>{
+    if(!settings[key].on) return;
+    if(settings[key].time !== hhmm) return;
+    const fireKey = dateKey+"_"+key;
+    if(firedToday[fireKey]) return;
+    firedToday[fireKey] = true;
+
+    let msg = REMINDER_MSG[key];
+    if(key === "motivation"){
+      const m = MOTIVATIONS[Math.floor(Math.random()*MOTIVATIONS.length)];
+      msg = "🌅 " + m.text;
+    }
+    if(key === "workout"){
+      const w = WORKOUTS[getTodayKey()];
+      msg = "💪 " + w.title + " — пора начинать!";
+    }
+
+    showToast(msg);
+    if(Notification.permission === "granted"){
+      new Notification("FitWeek", { body: msg, icon: "💪" });
+    }
+  });
+}
+
+document.getElementById("enableNotifyBtn").addEventListener("click",()=>{
+  if(!("Notification" in window)){
+    showToast("Браузер не поддерживает уведомления");
+    return;
+  }
+  Notification.requestPermission().then(p=>{
+    showToast(p==="granted" ? "Уведомления включены! 🔔" : "Разрешите уведомления в настройках браузера");
+  });
+});
+
+/* =============================================
+   ТЕМА
+   ============================================= */
+
+const themeToggle = document.getElementById("themeToggle");
+function updateThemeIcon(){
+  themeToggle.textContent = document.documentElement.getAttribute("data-theme")==="dark" ? "☀️" : "🌙";
+}
+themeToggle.addEventListener("click",()=>{
+  const dark = document.documentElement.getAttribute("data-theme")==="dark";
+  if(dark){ document.documentElement.removeAttribute("data-theme"); localStorage.setItem("fitTheme","light"); }
+  else { document.documentElement.setAttribute("data-theme","dark"); localStorage.setItem("fitTheme","dark"); }
+  updateThemeIcon();
+});
+
+/* =============================================
+   СТАРТ
+   ============================================= */
+
+const today = getTodayKey();
+document.getElementById("todayDate").textContent = formatDate();
+randomMotivation();
+renderWorkout(today,"todayWorkout");
+renderMeals(today,"todayMeals");
+document.getElementById("markDoneBtn").addEventListener("click",markWorkoutDone);
+
+let selectedWorkoutDay = today;
+function selectWorkoutDay(d){
+  selectedWorkoutDay = d;
+  renderWorkout(d,"workoutDetail");
+  buildDayPicker("workoutDayPicker",selectWorkoutDay,d);
+}
+buildDayPicker("workoutDayPicker",selectWorkoutDay,today);
+selectWorkoutDay(today);
+
+document.getElementById("workoutWeek").innerHTML = DAYS.map(d=>`
+  <div class="week-day-card" data-day="${d}">
+    <h4>${DAY_FULL[d]} — ${WORKOUTS[d].title}</h4>
+    <p>${WORKOUTS[d].exercises[0]}… · ${WORKOUTS[d].time}</p>
+  </div>`).join("");
+document.querySelectorAll(".week-day-card").forEach(c=>{
+  c.addEventListener("click",()=>{
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+    document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+    document.querySelector('.tab[data-panel="workouts"]').classList.add("active");
+    document.getElementById("panel-workouts").classList.add("active");
+    selectWorkoutDay(c.dataset.day);
+  });
+});
+
+let selectedMenuDay = today;
+function selectMenuDay(d){
+  selectedMenuDay = d;
+  renderMeals(d,"menuDetail");
+  buildDayPicker("menuDayPicker",selectMenuDay,d);
+}
+buildDayPicker("menuDayPicker",selectMenuDay,today);
+selectMenuDay(today);
+
+initRemindersUI();
+updateProgress();
+updateThemeIcon();
+setInterval(checkReminders,30000);
+checkReminders();
+</script>
+</body>
+</html>
