@@ -1,0 +1,42 @@
+/* StrokeText — react-bits, адаптация под сайт */
+.stroke-text {
+  display: block;
+  width: 100%;
+  line-height: 0;
+}
+
+.stroke-text--hover {
+  cursor: pointer;
+}
+
+.stroke-text__svg {
+  display: block;
+  width: 100%;
+  height: var(--stroke-text-height, 2.5rem);
+  overflow: visible;
+}
+
+.stroke-text__stroke,
+.stroke-text__fill {
+  font-family: var(--font, "Josefin Sans", sans-serif);
+  user-select: none;
+}
+
+.hero__title .stroke-text__svg,
+.section__title .stroke-text__svg,
+.cta__title .stroke-text__svg,
+.contact__title .stroke-text__svg {
+  overflow: visible;
+}
+
+.section__head .section__title.has-stroke-text::after {
+  bottom: -0.15rem;
+}
+
+.hero__title.has-stroke-text,
+.section__title.has-stroke-text,
+.cta__title.has-stroke-text,
+.contact__title.has-stroke-text {
+  color: transparent;
+  text-shadow: none;
+}

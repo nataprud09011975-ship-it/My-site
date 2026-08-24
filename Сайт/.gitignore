@@ -1,0 +1,21 @@
+# Системные и служебные файлы
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.log
+.env
+.env.*
+
+# Черновики и рабочие копии — на сайт не входят
+Проект 5/
+Propt,md
+*.docx
+
+# Исходники фото в корне проекта и в images/
+# Сайт использует только images/hero.png, images/about-natalia.png и images/projects/
+/*.jpg
+/*.jpeg
+/*.png
+images/*.jpg
+images/*.jpeg
+images/*.JPG
