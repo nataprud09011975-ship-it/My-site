@@ -24,7 +24,6 @@
 
 .hero__title .stroke-text__svg,
 .section__title .stroke-text__svg,
-.cta__title .stroke-text__svg,
 .contact__title .stroke-text__svg {
   overflow: visible;
 }
@@ -35,7 +34,6 @@
 
 .hero__title.has-stroke-text,
 .section__title.has-stroke-text,
-.cta__title.has-stroke-text,
 .contact__title.has-stroke-text {
   color: transparent;
   text-shadow: none;

@@ -48,7 +48,7 @@ document.querySelectorAll('.reveal, .fade-up').forEach((el) => {
 });
 
 document.querySelectorAll(
-  '.section__head, .project-card, .skills__card, .approach__step, .why__grid, .audience__inner, .manifest__quote, .reviews__head, .cta__inner, .contact__inner, .about__photo, .about__content'
+  '.section__head, .project-card, .price-card, .price-extras, .price-order, .skills__card, .approach__step, .why__grid, .audience__inner, .manifest__quote, .reviews__head, .cta__inner, .contact__inner, .about__photo, .about__content'
 ).forEach((el) => {
   el.classList.add('fade-up');
   revealObserver.observe(el);
@@ -66,6 +66,82 @@ const syncProjectView = () => {
 window.addEventListener('hashchange', syncProjectView);
 if (window.location.hash.startsWith('#project-')) {
   syncProjectView();
+}
+
+const orderDialog = document.getElementById('orderDialog');
+const orderForm = document.getElementById('orderForm');
+const orderOpen = document.getElementById('orderOpen');
+const orderClose = document.getElementById('orderClose');
+const orderError = document.getElementById('orderError');
+const orderSuccess = document.getElementById('orderSuccess');
+
+const resetOrderForm = () => {
+  if (!orderForm || !orderSuccess || !orderError) return;
+  orderForm.hidden = false;
+  orderSuccess.hidden = true;
+  orderError.hidden = true;
+  orderError.textContent = '';
+  orderForm.reset();
+};
+
+if (orderDialog && orderOpen) {
+  orderOpen.addEventListener('click', () => {
+    resetOrderForm();
+    if (typeof orderDialog.showModal === 'function') {
+      orderDialog.showModal();
+    } else {
+      orderDialog.setAttribute('open', '');
+    }
+    const nameField = orderForm && orderForm.elements.namedItem('name');
+    if (nameField && typeof nameField.focus === 'function') {
+      nameField.focus();
+    }
+  });
+}
+
+if (orderDialog && orderClose) {
+  orderClose.addEventListener('click', () => {
+    if (typeof orderDialog.close === 'function') {
+      orderDialog.close();
+    } else {
+      orderDialog.removeAttribute('open');
+    }
+  });
+}
+
+if (orderDialog) {
+  orderDialog.addEventListener('click', (event) => {
+    if (event.target === orderDialog && typeof orderDialog.close === 'function') {
+      orderDialog.close();
+    }
+  });
+}
+
+if (orderForm && orderDialog) {
+  orderForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const name = String(orderForm.elements.namedItem('name')?.value || '').trim();
+    const phone = String(orderForm.elements.namedItem('phone')?.value || '').trim();
+    const consent = Boolean(orderForm.elements.namedItem('consent')?.checked);
+
+    if (!name || !phone || !consent) {
+      if (orderError) {
+        orderError.hidden = false;
+        orderError.textContent = 'Заполните имя, телефон и подтвердите согласие с политикой конфиденциальности.';
+      }
+      return;
+    }
+
+    const subject = encodeURIComponent('Заявка на проект с сайта');
+    const body = encodeURIComponent(
+      `Имя: ${name}\nТелефон: ${phone}\nСогласие с политикой конфиденциальности: да`
+    );
+    window.location.href = `mailto:prud_n@mail.ru?subject=${subject}&body=${body}`;
+
+    orderForm.hidden = true;
+    if (orderError) orderError.hidden = true;
+    if (orderSuccess) orderSuccess.hidden = false;
+  });
 }
 
 const splashMount = document.getElementById('splash-cursor');
@@ -110,7 +186,7 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
       playDelay: 0.5
     });
 
-    initStrokeText('.section__title, .cta__title, .contact__title', {
+    initStrokeText('.section__title, .contact__title, .legal__title', {
       ...strokeTextOptions,
       trigger: 'scroll'
     });

@@ -29,6 +29,7 @@
       <a href="#about">Обо мне</a>
       <a href="#approach">Подход</a>
       <a href="#services">Услуги</a>
+      <a href="#price">Прайс</a>
       <a href="#reviews">Отзывы</a>
       <a href="#contact">Контакт</a>
     </nav>
@@ -860,12 +861,104 @@
       </div>
     </section>
 
+    <!-- Прайс -->
+    <section class="section price" id="price">
+      <div class="price__inner">
+        <div class="section__head">
+          <p class="section__label">Стоимость</p>
+          <h2 class="section__title">Прайс</h2>
+        </div>
+
+        <div class="price__grid">
+          <article class="price-card">
+            <h3 class="price-card__title">Базовый проект</h3>
+            <ul class="price-card__list">
+              <li>обмерный план</li>
+              <li>план расстановки мебели</li>
+              <li>перепланировка (бонус)</li>
+            </ul>
+            <p class="price-card__sum"><span>1 300</span> ₽ / м²</p>
+          </article>
+
+          <article class="price-card price-card--featured">
+            <h3 class="price-card__title">Основной проект</h3>
+            <ul class="price-card__list">
+              <li>обмерный план</li>
+              <li>план расстановки мебели</li>
+              <li>перепланировка (бонус)</li>
+              <li>коллажи</li>
+              <li>спецификация</li>
+            </ul>
+            <p class="price-card__sum"><span>3 000</span> ₽ / м²</p>
+          </article>
+
+          <article class="price-card">
+            <h3 class="price-card__title">Проект под ключ</h3>
+            <ul class="price-card__list">
+              <li>обмерный план</li>
+              <li>план расстановки мебели</li>
+              <li>перепланировка (бонус)</li>
+              <li>коллажи</li>
+              <li>спецификация</li>
+              <li>рабочая документация</li>
+            </ul>
+            <p class="price-card__sum"><span>4 000</span> ₽ / м²</p>
+          </article>
+        </div>
+
+        <div class="price-extras">
+          <h3 class="price-extras__title">Дополнительные услуги</h3>
+          <ul class="price-extras__list">
+            <li>Авторское сопровождение — 1 000 ₽ в час или 50 000 ₽ в месяц + проезд до объекта</li>
+            <li>Комплектация — 500 ₽ / м²</li>
+            <li>Консультация и сопровождение в магазинах — 1 000 ₽ / час</li>
+          </ul>
+        </div>
+
+        <div class="price-order">
+          <p class="price-order__lead">
+            Если Вам нужен интерьер, который выглядит стильно и ощущается всегда современно — давайте создадим!
+          </p>
+          <button class="btn btn--solid" type="button" id="orderOpen">Заказать проект</button>
+        </div>
+      </div>
+    </section>
+
+    <dialog class="order-dialog" id="orderDialog" aria-labelledby="orderTitle">
+      <button class="order-dialog__close" type="button" id="orderClose" aria-label="Закрыть форму">
+        <span aria-hidden="true">×</span>
+      </button>
+      <h3 class="order-dialog__title" id="orderTitle">Заказать проект</h3>
+      <p class="order-dialog__lead">Оставьте имя и телефон — я свяжусь с вами, чтобы обсудить задачу.</p>
+      <form class="order-form" id="orderForm" novalidate>
+        <label class="order-form__field">
+          <span>Имя</span>
+          <input type="text" name="name" autocomplete="name" required placeholder="Как к вам обращаться">
+        </label>
+        <label class="order-form__field">
+          <span>Телефон</span>
+          <input type="tel" name="phone" autocomplete="tel" required placeholder="+7 (___) ___-__-__">
+        </label>
+        <div class="order-form__consent">
+          <input type="checkbox" id="orderConsent" name="consent" required>
+          <p>
+            <label for="orderConsent">Я даю согласие на обработку персональных данных в соответствии с</label>
+            <a href="legal/privacy.html" target="_blank" rel="noopener noreferrer">политикой конфиденциальности</a>
+          </p>
+        </div>
+        <p class="order-form__error" id="orderError" hidden></p>
+        <button class="btn btn--solid order-form__submit" type="submit">Отправить заявку</button>
+      </form>
+      <p class="order-form__ok" id="orderSuccess" hidden>
+        Спасибо! Откроется окно почты с заявкой. Если этого не произошло, напишите на
+        <a href="mailto:prud_n@mail.ru">prud_n@mail.ru</a>
+        или в Telegram.
+      </p>
+    </dialog>
+
     <!-- Финальный CTA -->
     <section class="section cta">
       <div class="cta__inner fade-up">
-        <h2 class="cta__title">
-          Если Вам нужен интерьер, который выглядит стильно и ощущается всегда современно — давайте создадим!
-        </h2>
         <p class="cta__text">
           Могу помочь с концепцией, чертежами, комплектацией и реализацией.
           От обмерного плана до готового интерьера.
@@ -915,14 +1008,11 @@
   </main>
 
   <footer class="footer">
-    <a href="#top" class="logo logo--footer" aria-label="Наталья Прудникова дизайн — наверх">
-      <span class="logo__name">Наталья Прудникова</span>
-      <span class="logo__sub">
-        <span class="logo__rule" aria-hidden="true"></span>
-        <span class="logo__word">дизайн</span>
-        <span class="logo__rule" aria-hidden="true"></span>
-      </span>
-    </a>
+    <nav class="footer__legal" aria-label="Правовая информация">
+      <a href="legal/privacy.html">Политика конфиденциальности</a>
+      <span aria-hidden="true">/</span>
+      <a href="legal/offer.html">Публичная оферта</a>
+    </nav>
     <p class="footer__copy">© 2026 Наталья Прудникова дизайн</p>
   </footer>
 
